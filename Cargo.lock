@@ -5828,6 +5828,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "spatial-weaver-bevy"
+version = "0.0.0"
+dependencies = [
+ "bevy",
+]
+
+[[package]]
+name = "spatial-weaver-lib"
+version = "0.0.0"
+
+[[package]]
 name = "spin"
 version = "0.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
