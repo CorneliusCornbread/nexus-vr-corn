@@ -5830,9 +5830,6 @@ dependencies = [
 [[package]]
 name = "spatial-weaver-bevy"
 version = "0.0.0"
-dependencies = [
- "bevy",
-]
 
 [[package]]
 name = "spatial-weaver-lib"
