@@ -1,15 +1,15 @@
 type Pos2D = (f32, f32);
 
 trait Button {
-	fn on_press_down(&self, callback: Fn());
+	fn on_press_down(&self, callback: fn());
 
-	fn on_press_release(&self, callback: Fn());
+	fn on_press_release(&self, callback: fn());
 }
 
 trait Button3D: Button {
 	/// Called when the depth of the user's press on the 3D button changes.
 	/// Ranges from 0 - 1.0 where 0 is not pressed at all and 1.0 is fully pressed.
-	fn on_press_pressure(&self, callback: Fn(f32));
+	fn on_press_pressure(&self, callback: fn(&f32));
 }
 
 trait TextInput {
