@@ -11,12 +11,15 @@ members = [
 	"apps/social/replicate-server",
 	"apps/social/server",
 
+	"apps/legacy_web/frontend",
+	"apps/legacy_web/backend",
+
 	"crates/nexus-voicechat",
 	"crates/universal-capture",
 	"crates/egui-picking",
-	"crates/picking-xr",
 	"crates/spatial-weaver/spatial-weaver-bevy",
 	"crates/spatial-weaver/spatial-weaver-lib",
+	"crates/picking-xr", "apps/legacy_web/backend", "apps/legacy_web/frontend",
 ]
 
 # These settings will apply to all members of the workspace that opt in to them
