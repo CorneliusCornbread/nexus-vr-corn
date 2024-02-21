@@ -1,5 +1,3 @@
-type Pos2D = (f32, f32);
-
 trait Button {
 	fn on_press_down(&self, callback: fn());
 
