@@ -109,8 +109,9 @@ async fn handle_connection(incoming: IncomingSession) -> Result<()> {
 
 fn server_url(subject_alt_name: &str, port: u16, cert: &Certificate) -> String {
 	let cert_hash = cert.hashes().pop().expect("should be at least one hash");
-	let encoded_cert_hash = BASE64_URL_SAFE_NO_PAD.encode(cert_hash);
-	format!("https://{subject_alt_name}:{port}/#{encoded_cert_hash}")
+	//let encoded_cert_hash = BASE64_URL_SAFE_NO_PAD.encode(cert_hash);
+	//format!("https://{subject_alt_name}:{port}/#{encoded_cert_hash}")
+	String::new()
 }
 
 #[cfg(test)]
