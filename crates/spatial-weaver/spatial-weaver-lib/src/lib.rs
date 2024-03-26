@@ -1,10 +1,10 @@
 use std::cmp::Ordering;
 
-mod locomotion;
-mod spacial;
+pub mod locomotion;
+pub mod spacial;
 #[cfg(test)]
 mod tests;
-mod ui;
+pub mod ui;
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub enum InteractionType {
@@ -54,5 +54,47 @@ impl Ord for InteractionType {
 impl PartialOrd for InteractionType {
 	fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
 		Some(self.cmp(other))
+	}
+}
+
+pub struct TransformPos {
+	pub pos_x: f32,
+	pub pos_y: f32,
+	pub pos_z: f32,
+}
+
+pub struct TransformRot {
+	pub rot_x: f32,
+	pub rot_y: f32,
+	pub rot_z: f32,
+	pub rot_w: f32,
+}
+
+pub struct TransformData {
+	pub pos: TransformPos,
+	pub rot: TransformRot,
+}
+
+impl From<TransformData> for TransformPos {
+	fn from(value: TransformData) -> Self {
+		value.pos
+	}
+}
+
+impl From<TransformData> for TransformRot {
+	fn from(value: TransformData) -> Self {
+		value.rot
+	}
+}
+
+impl AsRef<TransformRot> for TransformData {
+	fn as_ref(&self) -> &TransformRot {
+		&self.rot
+	}
+}
+
+impl AsRef<TransformPos> for TransformData {
+	fn as_ref(&self) -> &TransformPos {
+		&self.pos
 	}
 }

@@ -7145,6 +7145,7 @@ name = "spatial-weaver-bevy"
 version = "0.0.0"
 dependencies = [
  "bevy",
+ "spatial-weaver-lib",
 ]
 
 [[package]]
