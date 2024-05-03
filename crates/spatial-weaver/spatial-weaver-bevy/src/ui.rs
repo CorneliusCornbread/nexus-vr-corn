@@ -4,10 +4,11 @@ use bevy::{
 		entity::Entity,
 		event::EventReader,
 		system::{Query, Res},
+		world::World,
 	},
 	math::Vec3,
 	time::Time,
-	transform::components::Transform,
+	transform::components::{GlobalTransform, Transform},
 };
 use bevy_rapier3d::{
 	pipeline::{CollisionEvent, ContactForceEvent},
@@ -28,6 +29,7 @@ pub struct BevyButton3D {
 fn check_ui_intersections(
 	pointer: Query<(Entity, &Interactor3D)>,
 	rapier_context: Res<RapierContext>,
+	world: &World,
 ) {
 	// TODO: change this later, we're going to support multiple pointers, I'm just lazy
 	let entity = pointer
@@ -43,6 +45,17 @@ fn check_ui_intersections(
 				"The entities {:?} and {:?} have intersecting colliders!",
 				collider1, collider2
 			);
+
+			let col1_ref = world.entity(collider1);
+			let col1_transform: &GlobalTransform =
+				col1_ref.get().expect("Collider1 does not have transform");
+
+			let col2_ref = world.entity(collider2);
+			let col2_transform: &GlobalTransform =
+				col2_ref.get().expect("Collider2 does not have transform");
+
+			let transformed =
+				col1_transform.transform_point(col2_transform.translation());
 		}
 	}
 }
