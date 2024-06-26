@@ -1,3 +1,5 @@
+pub mod input_field;
+
 use bevy::ecs::component::Component;
 
 pub mod ui;
