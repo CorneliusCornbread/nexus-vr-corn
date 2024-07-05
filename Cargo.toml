@@ -1,25 +1,24 @@
 [workspace]
 resolver = "2"
 members = [
-	"apps/rvid/client",
-	"apps/rvid/server",
+	"apps/legacy_web/backend",
+	"apps/legacy_web/frontend",
+	"apps/networked_physics_demo/client",
+	"apps/networked_physics_demo/server",
 	"apps/social/client",
 	"apps/social/common",
 	"apps/social/networking",
-	"apps/social/replicate-client",
-	"apps/social/replicate-common",
-	"apps/social/replicate-server",
 	"apps/social/server",
-
-	"apps/legacy_web/frontend",
-	"apps/legacy_web/backend",
-
-	"crates/nexus-voicechat",
-	"crates/universal-capture",
+	"crates/bevy_egui_keyboard",
+	"crates/did-chain",
+	"crates/did-simple",
 	"crates/egui-picking",
-	"crates/spatial-weaver/spatial-weaver-bevy",
+	"crates/picking-xr",
+	"crates/replicate/client",
+	"crates/replicate/common",
+	"crates/replicate/server",
 	"crates/spatial-weaver/spatial-weaver-lib",
-	"crates/picking-xr", "apps/legacy_web/backend", "apps/legacy_web/frontend",
+	"crates/spatial-weaver/spatial-weaver-bevy",
 ]
 
 # These settings will apply to all members of the workspace that opt in to them
@@ -28,50 +27,74 @@ version = "0.0.0"
 license = "MIT OR BSD-2-Clause-Patent OR Apache-2.0"
 repository = "https://github.com/NexusSocial/nexus-vr"
 edition = "2021"
-rust-version = "1.74.1"
+rust-version = "1.78.0"
 
 [workspace.dependencies]
+async-compat = "0.2.4"
 base64 = "0.21.7"
-bevy = "0.12"
-bevy-inspector-egui = { git = "https://github.com/Schmarni-Dev/bevy-inspector-egui", branch = "0210" }
-bevy_egui = { git = "https://github.com/Schmarni-Dev/bevy_egui/", branch = "add-worldspace-egui" }
-bevy_mod_inverse_kinematics = "0.5"
-# bevy_mod_picking = "0.17.0"
-bevy_mod_picking = { git = "https://github.com/Schmarni-Dev/bevy_mod_picking", branch = "no_windows", default-features = false }
-bevy_mod_raycast = "0.16.0"
-bevy_oxr = { git = "https://github.com/awtterpip/bevy_oxr", rev = "53af86b" }
-# bevy_picking_core = "0.17.0"
-bevy_picking_core = { package = "bevy_picking_core", git = "https://github.com/Schmarni-Dev/bevy_mod_picking", branch = "no_windows" }
-bevy_schminput = { git = "https://github.com/Schmarni-Dev/Schminput", rev = "b345419" }
-bevy_vrm = "0.0.7"
-bevy_web_asset = { git = "https://github.com/MalekiRe/bevy_web_asset", rev = "23f6670" }
+bevy = { version = "0.13", features = ["serialize"] }
+bevy-inspector-egui = "0.23.4"
+bevy_egui = { git = "https://github.com/Schmarni-Dev/bevy_egui/", branch = "nexus-use-bevy-0.13" }
+bevy_egui_keyboard.path = "crates/bevy_egui_keyboard"
+bevy_flycam = "0.13"
+bevy_mod_inverse_kinematics = "0.6"
+bevy_mod_picking = { version = "0.18",default-features = false}
+bevy_mod_raycast = "0.17.0"
+bevy_oxr = { git = "https://github.com/awtterpip/bevy_oxr", rev = "c6d0686" }
+bevy_picking_core = "0.18"
+bevy_rapier3d = "0.26"
+bevy_schminput = { git = "https://github.com/Schmarni-Dev/Schminput", rev = "d5695bb" }
+bevy_vrm = "0.0.8"
+bevy_web_asset = { git = "https://github.com/Schmarni-Dev/bevy_web_asset", rev = "f10a2df" }
 bytes = "1.5.0"
 clap = { version = "4.4.11", features = ["derive"] }
 color-eyre = "0.6"
-derive_more = { version = "0.99", default-features = false, features = [
-	"add",
-	"mul",
-	"deref",
-	"deref_mut",
-] }
-egui = "0.23"
-egui-picking = { path = "./crates/egui-picking" }
-#lightyear = "0.5.1"
-lightyear = { git = "https://github.com/cBournhonesque/lightyear", rev = "b16ae27" }
-openxr = "0.17"
-opus = { git = "https://github.com/Schmarni-Dev/opus-rs", branch = "unsafe-libopus", default-features = false, features = [
-	"unsafe-libopus-backend",
-] }
-picking-xr = { path = "./crates/picking-xr" }
+egui = "0.26"
+egui-picking = { path = "crates/egui-picking" }
+eyre = "0.6"
+futures = "0.3.30"
+lightyear = "0.12"
+openxr = "0.18"
+picking-xr = { path = "crates/picking-xr" }
+pin-project = "1"
+rand = "0.8.5"
+rand_xoshiro = "0.6.0"
 random-number = "0.1.8"
+replicate-client.path = "crates/replicate/client"
+replicate-server.path = "crates/replicate/server"
 serde = { version = "1.0.193", features = ["derive"] }
+serde_json = "1.0.114"
+slotmap = "1.0.7"
 social-common.path = "apps/social/common"
 social-networking.path = "apps/social/networking"
-tokio = "1.35.1"
+thiserror = "1.0.56"
+tokio = { version = "1.35.1", default-features = false }
+tokio-serde = "0.9"
+tokio-util = { version = "0.7.10", default-features = true }
 tracing = "0.1.40"
 tracing-subscriber = "0.3.18"
 url = "2.5.0"
-wtransport = "0.1.10"
+uuid = "1.7.0"
+wtransport = "0.1.13"
+
+[workspace.dependencies.derive_more]
+version = "0.99"
+default-features = false
+features = [
+	"add",
+	"deref",
+	"deref_mut",
+	"mul",
+	"from",
+]
+
+[workspace.dependencies.opus]
+git = "https://github.com/Schmarni-Dev/opus-rs"
+branch = "unsafe-libopus"
+default-features = false
+features = [
+	"unsafe-libopus-backend",
+]
 
 [profile.dev]
 # Enable a small amount of optimization in debug mode
@@ -82,10 +105,5 @@ opt-level = 1
 # Seems to cause crashes on mac on opt-level 3
 opt-level = 2
 
-[patch.crates-io]
-# Adds `links` support
-openxr = { git = "https://github.com/Ralith/openxrs", rev = "0177d2d" }
-ndk = { git = "https://github.com/Schmarni-Dev/ndk.git", branch = "070" }
-ndk-sys = { package = "ndk-sys", git = "https://github.com/Schmarni-Dev/ndk.git", branch = "070" }
-ndk-context = { package = "ndk-context", git = "https://github.com/Schmarni-Dev/ndk.git", branch = "070" }
-bevy_pbr = { package = "bevy_pbr", git = "https://github.com/MalekiRe/bevy", branch = "release-0.12.1" }
+[profile.dev.package.rapier3d]
+opt-level = 3

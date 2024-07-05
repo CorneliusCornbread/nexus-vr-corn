@@ -1,5 +1,7 @@
+use bevy::window::PrimaryWindow;
 use bevy::{ecs::schedule::Condition, prelude::*, utils::HashMap};
-use bevy_egui::{egui::PointerButton, EguiInput, EguiRenderToTexture};
+
+use bevy_egui::{egui, egui::PointerButton, EguiInput, EguiRenderToTexture, EguiSet};
 use bevy_mod_picking::{
 	events::{Down, Move, Out, Pointer, Up},
 	focus::PickingInteraction,
@@ -7,7 +9,6 @@ use bevy_mod_picking::{
 	pointer::PointerId,
 	prelude::{ListenerInput, On},
 };
-
 #[derive(Clone, Copy, Component, Debug)]
 pub struct WorldUI {
 	pub size_x: f32,
@@ -148,6 +149,12 @@ impl Plugin for PickabelEguiPlugin {
 					.or_else(on_event::<UIPointerUp>()),
 			),
 		);
+		app.add_systems(
+			PreUpdate,
+			(forward_egui_events
+				.after(EguiSet::ProcessInput)
+				.before(EguiSet::BeginFrame),),
+		);
 	}
 }
 
@@ -158,6 +165,44 @@ pub struct CurrentPointers {
 #[derive(Component, Default, DerefMut, Deref)]
 pub struct CurrentPointerInteraction {
 	pub pointer: Option<PointerId>,
+}
+
+pub fn forward_egui_events(
+	mut query: Query<&mut EguiInput, With<WorldUI>>,
+	window_query: Query<&EguiInput, (With<PrimaryWindow>, Without<WorldUI>)>,
+) {
+	let Ok(primary_input) = window_query.get_single() else {
+		warn!("Unable to find one Primary Window!");
+		return;
+	};
+
+	let events = primary_input.events.iter().filter_map(|e| {
+		match e {
+			egui::Event::Copy => Some(e.clone()),
+			egui::Event::Cut => Some(e.clone()),
+			egui::Event::Paste(_) => Some(e.clone()),
+			egui::Event::Text(_) => Some(e.clone()),
+			egui::Event::Key {
+				key: _,
+				physical_key: _,
+				pressed: _,
+				repeat: _,
+				modifiers: _,
+			} => Some(e.clone()),
+			// egui::Event::Scroll(_) => Some(e.clone()),
+			// egui::Event::Zoom(_) => Some(e.clone()),
+			// egui::Event::MouseWheel {
+			// 	unit:_,
+			// 	delta:_,
+			// 	modifiers:_,
+			// } => Some(e.clone()),
+			_ => None,
+		}
+	});
+
+	for mut egui_input in query.iter_mut() {
+		egui_input.events.extend(events.clone());
+	}
 }
 
 pub fn ui_interactions(
@@ -204,14 +249,19 @@ pub fn ui_interactions(
 				Some(_) => continue,
 			}
 			let local_pos = *position - transform.translation();
+			// info!("pos: {}", position);
+			// info!("local_pos: {}", local_pos);
 			let rotated_point = transform
 				.to_scale_rotation_translation()
 				.1
 				.inverse()
 				.mul_vec3(local_pos);
-			let mut uv = rotated_point.xz() + Vec2::splat(0.5);
+			let mut uv = rotated_point.xz()
+				+ (Vec2::splat(0.5) * Vec2::new(ui.size_x, ui.size_y));
+			// info!("ui_pos: {}", uv);
 			uv.x /= ui.size_x;
 			uv.y /= ui.size_y;
+			// info!("normal_ui_pos: {}", uv);
 			let image = textures.get(texture.0.clone()).unwrap();
 			input.events.push(bevy_egui::egui::Event::PointerMoved(
 				bevy_egui::egui::Pos2 {
